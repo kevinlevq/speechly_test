@@ -1,0 +1,36 @@
+model: large-highaccuracy
+templates: |
+  *get_district The district is $sce_locations(name)
+  *get_district The identified district is $sce_locations(name)
+  *get_district I am at $sce_locations(name)
+  *get_district $sce_locations(name)
+  *get_district District $sce_locations(name)
+  *get_district I am in $sce_locations(name)
+
+  *get_poles The pole height is [15](height) feet tall
+  *get_poles [15](height) feet tall
+
+  *get_transformer The number of transformers is [3](count)
+  *get_transformer There are [2](count) transformers
+  *get_transformer [2](count) transformers
+
+intents:
+  - name: get_district
+  - name: get_poles
+  - name: get_transformer
+
+entities:
+  - name: name
+    type: string
+  - name: height
+    type: number
+  - name: count
+    type: number
+
+imports:
+  - name: sce_locations
+    source: SCE locations - Sheet1.csv
+    field: 1
+silence_triggered_segmentation: 720
+enable_strict_nlu: true
+non_streaming_nlu: true
