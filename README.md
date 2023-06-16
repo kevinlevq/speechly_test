@@ -3,7 +3,7 @@ Code: SpeechlyTest -> ViewController (speechly implementation)
 
 Config: config-app -> config.yaml
 
-Docs to refer back to: 
+Docs to refer back to: <br>
 intent docs: https://github.com/speechly/ios-client/blob/master/docs/Intent.md <br>
 entity docs: https://github.com/speechly/ios-client/blob/master/docs/Entity.md <br>
 speechly CLI: https://docs.speechly.com/features/cli <br>
