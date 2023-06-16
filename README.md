@@ -1,2 +1,4 @@
 # speechly_test
-This is the repo for testing out speechly
+Code: ViewController (speechly implementation)
+
+Config: config-app -> config.yaml
