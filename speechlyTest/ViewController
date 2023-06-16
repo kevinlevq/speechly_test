@@ -1,0 +1,246 @@
+import UIKit
+import Speechly
+import Foundation
+
+class ViewController: UIViewController {
+    private let manager = SpeechlyManager()
+
+    // Input fields
+    fileprivate var district: UITextField!
+    fileprivate var poleHeight: UITextField!
+    fileprivate var transformerCount: UITextField!
+    
+    // Submit button
+    fileprivate var submitButton: UIButton!
+    
+    // Error labels
+    fileprivate var districtErrorLabel: UILabel!
+    fileprivate var poleHeightErrorLabel: UILabel!
+    fileprivate var transformerCountErrorLabel: UILabel!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = UIColor.white
+        manager.addViews(view: view)
+        setupForm()
+    }
+    
+    fileprivate func setupForm() {
+        // Similar to your Alan AI setupForm function
+        let padding: CGFloat = 20
+        let textFieldHeight: CGFloat = 50
+        let buttonHeight: CGFloat = 50
+
+        district = UITextField()
+        district.placeholder = "Enter your district (ie the district is ... )"
+        district.borderStyle = .roundedRect
+        district.font = UIFont.preferredFont(forTextStyle: .body)
+        district.textColor = UIColor.darkGray
+        district.attributedPlaceholder = NSAttributedString(string: "Enter your district (ie My district is ___ )", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray,NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)])
+        district.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(district)
+
+        poleHeight = UITextField()
+        poleHeight.placeholder = "Enter the pole height (ie The pole height is ...)"
+        poleHeight.borderStyle = .roundedRect
+        poleHeight.font = UIFont.preferredFont(forTextStyle: .body)
+        poleHeight.textColor = UIColor.darkGray
+        poleHeight.attributedPlaceholder = NSAttributedString(string: "Enter the pole height (ie The pole height is ___ feet tall)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 13)])
+        poleHeight.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(poleHeight)
+
+        transformerCount = UITextField()
+        transformerCount.placeholder = "Enter the transformer count (ie The number of transformers is ...)"
+        transformerCount.borderStyle = .roundedRect
+        transformerCount.font = UIFont.preferredFont(forTextStyle: .body)
+        transformerCount.textColor = UIColor.darkGray
+        transformerCount.attributedPlaceholder = NSAttributedString(string: "Enter the transformer count (ie There are ___ transformers)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12)])
+        transformerCount.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(transformerCount)
+
+        submitButton = UIButton(type: .system)
+        submitButton.setTitle("Submit", for: .normal)
+        submitButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
+        submitButton.setTitleColor(UIColor.white, for: .normal)
+        submitButton.setTitleColor(UIColor.lightGray, for: .disabled)
+        submitButton.backgroundColor = UIColor.systemBlue
+        submitButton.layer.cornerRadius = 10
+        submitButton.clipsToBounds = true
+        submitButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(submitButton)
+        submitButton.addTarget(self, action: #selector(submitButtonTapped), for: .touchUpInside)
+        
+    
+        districtErrorLabel = UILabel()
+        districtErrorLabel.textColor = UIColor.red
+        districtErrorLabel.isHidden = true
+        districtErrorLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(districtErrorLabel)
+
+        poleHeightErrorLabel = UILabel()
+        poleHeightErrorLabel.textColor = UIColor.red
+        poleHeightErrorLabel.isHidden = true
+        poleHeightErrorLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(poleHeightErrorLabel)
+
+        transformerCountErrorLabel = UILabel()
+        transformerCountErrorLabel.textColor = UIColor.red
+        transformerCountErrorLabel.isHidden = true
+        transformerCountErrorLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(transformerCountErrorLabel)
+
+    
+    NSLayoutConstraint.activate([
+        district.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: padding),
+        district.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
+        district.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+        district.heightAnchor.constraint(equalToConstant: textFieldHeight),
+
+        poleHeight.topAnchor.constraint(equalTo: district.bottomAnchor, constant: padding),
+        poleHeight.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
+        poleHeight.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+        poleHeight.heightAnchor.constraint(equalToConstant: textFieldHeight),
+
+        transformerCount.topAnchor.constraint(equalTo: poleHeight.bottomAnchor, constant: padding),
+        transformerCount.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
+        transformerCount.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+        transformerCount.heightAnchor.constraint(equalToConstant: textFieldHeight),
+
+        submitButton.topAnchor.constraint(equalTo: transformerCount.bottomAnchor, constant: padding),
+        submitButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
+        submitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+        submitButton.heightAnchor.constraint(equalToConstant: buttonHeight),
+                
+        districtErrorLabel.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 5),
+        districtErrorLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
+        districtErrorLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+                
+        poleHeightErrorLabel.topAnchor.constraint(equalTo: districtErrorLabel.bottomAnchor, constant: 5),
+        poleHeightErrorLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
+        poleHeightErrorLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+                
+        transformerCountErrorLabel.topAnchor.constraint(equalTo: poleHeightErrorLabel.bottomAnchor, constant: 5),
+        transformerCountErrorLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
+        transformerCountErrorLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -padding),
+
+    ])
+}
+    
+    // MARK: Form Validation Methods
+    func validateDistrict() -> Bool {
+        if district.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+            districtErrorLabel.isHidden = false
+            districtErrorLabel.text = "Please enter a valid district"
+            return false
+        }
+        return true
+    }
+    
+    func validatePoleHeight() -> Bool {
+        if let height = Double(poleHeight.text ?? ""), height >= 0 {
+            return true
+        } else {
+            poleHeightErrorLabel.isHidden = false
+            poleHeightErrorLabel.text = "Please enter a valid pole height"
+            return false
+        }
+    }
+    
+    func validateTransformerCount() -> Bool {
+        if let count = Int(transformerCount.text ?? ""), count >= 0 {
+            return true
+        } else {
+            transformerCountErrorLabel.isHidden = false
+            transformerCountErrorLabel.text = "Please enter a valid transformer count"
+            return false
+        }
+    }
+    
+    @objc func submitButtonTapped() {
+        let districtValid = validateDistrict()
+        let poleHeightValid = validatePoleHeight()
+        let transformerCountValid = validateTransformerCount()
+        
+        if districtValid, poleHeightValid, transformerCountValid {
+            // let this go to the next screen where it says thank you and a go back button
+        }
+    }
+    
+    @objc func resetForm() {
+        // Reset form fields
+        district.text = ""
+        poleHeight.text = ""
+        transformerCount.text = ""
+        
+        // Reset error labels
+        districtErrorLabel.isHidden = true
+        poleHeightErrorLabel.isHidden = true
+        transformerCountErrorLabel.isHidden = true
+    }
+}
+
+class SpeechlyManager {
+    private let client: Speechly.Client
+    private let transcriptView = TranscriptView()
+    private lazy var speechButton = MicrophoneButtonView(delegate: self)
+
+    public init() {
+        client = try! Speechly.Client(
+            appId: UUID(uuidString: "d573a5b8-254a-4e80-91b0-026a80f2fe8a")!
+        )
+        client.delegate = self
+        speechButton.holdToTalkText = "Hold to talk"
+        speechButton.pressedScale = 1.5
+        transcriptView.autohideInterval = 3
+    }
+
+    public func addViews(view: UIView) {
+        // Adding the speechButton to the view
+        view.addSubview(speechButton)
+        speechButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            speechButton.widthAnchor.constraint(equalToConstant: 80),
+            speechButton.heightAnchor.constraint(equalToConstant: 80),
+            speechButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            speechButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20)
+        ])
+        
+        // Adding the transcriptView to the view
+        view.addSubview(transcriptView)
+        transcriptView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            // change background bc it changes the whole background to black
+            transcriptView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            transcriptView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            transcriptView.topAnchor.constraint(equalTo: view.topAnchor),
+            transcriptView.bottomAnchor.constraint(equalTo: speechButton.topAnchor, constant: -20)
+        ])
+    }
+
+
+    public func start() {
+        client.startContext()
+    }
+
+    public func stop() {
+        client.stopContext()
+    }
+}
+
+extension SpeechlyManager: MicrophoneButtonDelegate {
+    func didOpenMicrophone(_ button: MicrophoneButtonView) {
+        self.start()
+    }
+    func didCloseMicrophone(_ button: MicrophoneButtonView) {
+        self.stop()
+    }
+}
+
+// how to add intents
+extension SpeechlyManager: SpeechlyDelegate {
+    func speechlyClientDidUpdateSegment(_ client: SpeechlyProtocol, segment: Segment) {
+        DispatchQueue.main.async {
+            self.transcriptView.configure(segment: segment, animated: true)
+        }
+    }
+}
