@@ -1,4 +1,4 @@
 # speechly_test
-Code: ViewController (speechly implementation)
+Code: SpeechlyTest -> ViewController (speechly implementation)
 
 Config: config-app -> config.yaml
